@@ -6,18 +6,17 @@
 # Copyright 2014, Rackspace
 #
 
-#jenkins settings
+# jenkins settings
 node.default['jenkins']['master']['jvm_options'] = '-XX:MaxPermSize=512m'
 node.default['jenkins']['master']['listen_address'] = '0.0.0.0'
 
 # The following attributes need to match.  The first is the jenkins.war version to download from
 # http://mirrors.jenkins-ci.org/war/ and the second is the sha256 hash of the file to prevent download
 # of the war file on every Chef run.
-#node.default['jenkins']['master']['version']      = '1.571'
-#node.default['jenkins']['master']['checksum'] = '312d0a3fa6a394e2c9e6d31042b7db70674eb3abb3a431a41390fef97db0f9f4'
+# comment out old version --
+# node.default['jenkins']['master']['version']      = '1.571'
+# node.default['jenkins']['master']['checksum'] = '312d0a3fa6a394e2c9e6d31042b7db70674eb3abb3a431a41390fef97db0f9f4'
 node.default['jenkins']['master']['install_method'] = 'war'
-
-
 
 # other settings
 node.default['build-essential']['compile_time'] = true
@@ -29,7 +28,7 @@ critical_recipes = [
   'jenkins::master'
 ]
 
-#Run critical recipes
+# Run critical recipes
 critical_recipes.each do | recipe |
   include_recipe recipe
 end
@@ -55,6 +54,5 @@ template File.join(node['jenkins']['master']['home'], 'org.codefirst.SimpleTheme
   action :create_if_missing
   only_if { node['jenkinsstack']['rax_theme'] }
 end
-
 
 tag('jenkinsstack_master')

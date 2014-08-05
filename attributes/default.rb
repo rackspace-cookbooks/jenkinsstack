@@ -30,3 +30,7 @@ default['jenkinsstack']['plugins'] = [
   'jclouds-jenkins',
   'simple-theme-plugin'
 ]
+
+default['jenkinsstack']['packages'] = [
+  'git'
+]

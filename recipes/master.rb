@@ -6,8 +6,14 @@
 # Copyright 2014, Rackspace
 #
 
-# for package data to be updated earlier
-node.set['apt']['compile_time_update'] = true
+node.override['apt']['compile_time_update'] = true
+include_recipe 'apt'
+
+node.override['build-essential']['compile_time'] = true
+include_recipe 'build-essential'
+
+# other settings
+node.default['nginx']['default_site_enabled'] = false
 
 # jenkins settings
 node.default['jenkins']['master']['jvm_options'] = '-XX:MaxPermSize=512m'
@@ -21,12 +27,14 @@ node.default['jenkins']['master']['listen_address'] = '0.0.0.0'
 # node.default['jenkins']['master']['checksum'] = '312d0a3fa6a394e2c9e6d31042b7db70674eb3abb3a431a41390fef97db0f9f4'
 node.default['jenkins']['master']['install_method'] = 'war'
 
-# other settings
-node.default['build-essential']['compile_time'] = true
-node.default['nginx']['default_site_enabled'] = false
+
+node['jenkinsstack']['packages'].each do |pkg|
+  package pkg do
+    action :install
+  end
+end
 
 critical_recipes = [
-  'build-essential',
   'jenkins::java',
   'jenkins::master'
 ]

@@ -6,7 +6,10 @@
 # Copyright 2014, Rackspace
 #
 
-# for package data to be updated earlier
-node.set['apt']['compile_time_update'] = true
+node.override['apt']['compile_time_update'] = true
+include_recipe 'apt'
+
+node.override['build-essential']['compile_time'] = true
+include_recipe 'build-essential'
 
 tag('jenkinsstack_slave')

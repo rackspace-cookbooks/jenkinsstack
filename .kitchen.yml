@@ -50,4 +50,4 @@ platforms:
 
 suites:
   - name: default
-    run_list: recipe[jenkinsstack]
+    run_list: recipe[jenkinsstack::master]

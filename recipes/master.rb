@@ -36,7 +36,7 @@ critical_recipes.each do | recipe |
   include_recipe recipe
 end
 
-user "#{node['jenkins']['master']['user']}" do
+user node['jenkins']['master']['user'] do
   shell '/bin/bash'
   action :manage
 end

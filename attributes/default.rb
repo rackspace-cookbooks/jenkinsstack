@@ -5,7 +5,7 @@
 #
 # Copyright 2014, Rackspace
 #
-
+default['apt']['compile_time_update'] = true
 default['jenkinsstack']['rax_theme'] = true
 default['jenkinsstack']['plugins'] = [
                         "credentials",

@@ -6,6 +6,9 @@
 # Copyright 2014, Rackspace
 #
 
+# for package data to be updated earlier
+node.set['apt']['compile_time_update'] = true
+
 # jenkins settings
 node.default['jenkins']['master']['jvm_options'] = '-XX:MaxPermSize=512m'
 node.default['jenkins']['master']['listen_address'] = '0.0.0.0'

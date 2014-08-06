@@ -51,3 +51,5 @@ platforms:
 suites:
   - name: default
     run_list: recipe[jenkinsstack::master]
+  - name: slave
+    run_list: recipe[jenkinsstack::slave]

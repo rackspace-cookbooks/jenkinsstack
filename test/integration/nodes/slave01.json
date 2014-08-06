@@ -1,0 +1,29 @@
+{
+  "name": "slave01",
+  "tags": "jenkinsstack_slave",
+  "chef_environment": "slave_env",
+  "json_class": "Chef::Node",
+  "automatic": {
+    "hostname": "vagrant.vm",
+    "recipes": [
+      "jenkinsstack::slave"
+    ],
+    "roles": [
+      "jenkins_slave"
+    ],
+    "tags": [
+      "jenkinsstack_slave"
+    ],
+    "ipaddress": "192.168.0.23"
+  },
+  "normal": {
+  },
+  "chef_type": "node",
+  "default": {
+  },
+  "override": {
+  },
+  "run_list": [
+    "role[jenkins_slave]"
+  ]
+}

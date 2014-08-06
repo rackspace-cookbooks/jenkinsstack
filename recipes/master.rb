@@ -30,7 +30,7 @@ include_recipe 'jenkinsstack::_prep_ssh_keys'
 include_recipe 'jenkinsstack::_find_slaves'
 slaves = node.deep_fetch('jenkinsstack', 'slaves')
 if slaves.nil?
-  slaves = Hash.new # default it, so we don't have to write the next block indented
+  slaves = {} # default it, so we don't have to write the next block indented
 end
 
 # define the slaves launched via SSH

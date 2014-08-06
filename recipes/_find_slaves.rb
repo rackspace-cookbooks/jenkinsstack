@@ -20,7 +20,7 @@ else
     errmsg = 'Did not find Jenkins slaves to use, but none were set'
     Chef::Application.Log(errmsg)
   else
-    node.set['jenkinsstack']['slaves'] = Hash.new
+    node.set['jenkinsstack']['slaves'] = {}
     slaves.each do |slave|
       best_ip = best_ip_for(slave)
       if best_ip.nil? || best_ip.empty?

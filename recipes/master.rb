@@ -27,7 +27,6 @@ node.default['jenkins']['master']['listen_address'] = '0.0.0.0'
 # node.default['jenkins']['master']['checksum'] = '312d0a3fa6a394e2c9e6d31042b7db70674eb3abb3a431a41390fef97db0f9f4'
 node.default['jenkins']['master']['install_method'] = 'war'
 
-
 node['jenkinsstack']['packages'].each do |pkg|
   package pkg do
     action :install

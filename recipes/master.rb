@@ -6,63 +6,45 @@
 # Copyright 2014, Rackspace
 #
 
-node.override['apt']['compile_time_update'] = true
-include_recipe 'apt'
+# sweet!
+include_recipe 'chef-sugar'
 
-node.override['build-essential']['compile_time'] = true
-include_recipe 'build-essential'
+# Run base recipe (apt, java, various settings)
+include_recipe 'jenkinsstack::_base'
 
-# other settings
-node.default['nginx']['default_site_enabled'] = false
-
-# jenkins settings
-node.default['jenkins']['master']['jvm_options'] = '-XX:MaxPermSize=512m'
-node.default['jenkins']['master']['listen_address'] = '0.0.0.0'
-
-# The following attributes need to match.  The first is the jenkins.war version to download from
-# http://mirrors.jenkins-ci.org/war/ and the second is the sha256 hash of the file to prevent download
-# of the war file on every Chef run.
-# comment out old version --
-# node.default['jenkins']['master']['version']      = '1.571'
-# node.default['jenkins']['master']['checksum'] = '312d0a3fa6a394e2c9e6d31042b7db70674eb3abb3a431a41390fef97db0f9f4'
-node.default['jenkins']['master']['install_method'] = 'war'
-
-node['jenkinsstack']['packages'].each do |pkg|
-  package pkg do
-    action :install
-  end
-end
-
-critical_recipes = [
-  'jenkins::java',
-  'jenkins::master'
-]
-
-# Run critical recipes
-critical_recipes.each do | recipe |
-  include_recipe recipe
-end
+# Run critical recipe
+include_recipe 'jenkins::master'
 
 user node['jenkins']['master']['user'] do
   shell '/bin/bash'
   action :manage
 end
 
-node.default['jenkinsstack']['plugins'].each do |plugin_name|
-  jenkins_plugin plugin_name do
-    notifies :restart, 'service[jenkins]', :delayed
-  end
+# install plugins and theme
+include_recipe 'jenkinsstack::plugins'
+
+# prepare master for slaves
+include_recipe 'jenkinsstack::_prep_ssh_keys'
+
+# find any existing slaves
+include_recipe 'jenkinsstack::_find_slaves'
+slaves = node.deep_fetch('jenkinsstack', 'slaves')
+if slaves.nil?
+  slaves = Hash.new # default it, so we don't have to write the next block indented
 end
 
-# Install Rackspace Canon Jenkins Theme
-template File.join(node['jenkins']['master']['home'], 'org.codefirst.SimpleThemeDecorator.xml') do
-  source 'org.codefirst.SimpleThemeDecorator.xml'
-  mode 0644
-  owner node['jenkins']['master']['user']
-  group node['jenkins']['master']['group']
-  notifies :restart, 'service[jenkins]'
-  action :create_if_missing
-  only_if { node['jenkinsstack']['rax_theme'] }
+# define the slaves launched via SSH
+slaves.each do |slave_name, slave_ip|
+  jenkins_ssh_slave slave_name do
+    description 'Run builds as slaves'
+    remote_fs   '/home/jenkins'
+    labels      ['executor']
+
+    # SSH specific attributes
+    host        slave_ip # or 'slave.example.org'
+    user        node['jenkins']['master']['user']
+    credentials 'jenkins_slave'
+  end
 end
 
 tag('jenkinsstack_master')

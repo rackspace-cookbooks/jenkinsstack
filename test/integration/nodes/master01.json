@@ -1,0 +1,33 @@
+{
+  "name": "master01",
+  "tags": "jenkinsstack_master",
+  "chef_environment": "_default",
+  "json_class": "Chef::Node",
+  "automatic": {
+    "hostname": "vagrant.vm",
+    "recipes": [
+      "jenkinsstack::master"
+    ],
+    "roles": [
+      "jenkins_master"
+    ],
+    "tags": [
+      "jenkinsstack_master"
+    ],
+    "ipaddress": "192.168.0.24",
+    "jenkinsstack" : {
+      "jenkins_slave_ssh_pubkey": "xyz123"
+    }
+  },
+  "normal": {
+  },
+  "chef_type": "node",
+  "default": {
+  },
+  "override": {
+  },
+  "run_list": [
+    "role[jenkins_master]"
+  ],
+  "ipaddress": "192.168.0.24"
+}

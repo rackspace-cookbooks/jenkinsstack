@@ -6,7 +6,8 @@
 # Copyright 2014, Rackspace
 #
 
-default['jenkinsstack']['rax_theme'] = true
+default['jenkinsstack']['jnlp_port'] = 33_489
+default['jenkinsstack']['rax_theme'] = false
 default['jenkinsstack']['plugins'] = [
   'credentials',
   'ssh-credentials',

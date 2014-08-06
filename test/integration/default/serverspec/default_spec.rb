@@ -2,6 +2,14 @@
 
 require_relative 'spec_helper'
 
-describe 'default' do
-  it { pending 'write some tests' }
+describe file('/var/lib/jenkins') do
+  it { should be_directory }
+end
+
+describe port(8080) do
+  it { should be_listening }
+end
+
+describe process('java') do
+  it { should be_running }
 end

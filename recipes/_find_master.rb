@@ -20,6 +20,7 @@ else
     errmsg = 'Did not find Jenkins master to use, but none were set'
     Chef::Application.Log(errmsg)
   else
-    node.set['jenkinsstack']['master'] = results.first
+    found_master = results.first
+    node.run_state['jenkinsstack_master'] = found_master
   end
 end

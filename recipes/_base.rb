@@ -34,3 +34,23 @@ node['jenkinsstack']['packages'].each do |pkg|
 end
 
 include_recipe 'jenkins::java'
+
+## Hate to do these creates here, but we want them to exist before installing
+## Jenkins as the keys created are used on jenkins setup
+# Create the Jenkins user
+user node['jenkins']['master']['user'] do
+  home node['jenkins']['master']['home']
+end
+
+# Create the Jenkins group
+group node['jenkins']['master']['group'] do
+  members node['jenkins']['master']['user']
+end
+
+# create .ssh dir for jenkins
+directory "#{node['jenkins']['master']['home']}/.ssh" do
+  owner node['jenkins']['master']['user']
+  group node['jenkins']['master']['group']
+  mode 00700
+  recursive true
+end

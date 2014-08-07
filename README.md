@@ -1,9 +1,6 @@
 # jenkinsstack
 
-Template for new stacks that includes best practices and default files for
-Rubocop, Foodcritic (including custom [Rackspace rules](https://github.com/AutomationSupport/foodcritic-rackspace-rules)),
-Rake, Thor, etc. Eventually, and ideally, this would be used by [stackbuilder](https://github.com/rackerlabs/stackbuilder)
-to initialize new stacks.
+Stack used to configure a jenkins master and any number of jenkins slaves. By default, the stack uses SSH slaves (master initiated) as opposed to JNLP slaves (slave initiated). The master generates a private key that is used for jenkins authentication as well as passwordless SSH from master to slaves.
 
 ## [Changelog](CHANGELOG.md)
 
@@ -13,11 +10,11 @@ See CHANGELOG.md for additional information about changes to this stack over tim
 
 Ubuntu 12.04
 
-CentOS 6.5
+~~~CentOS 6.5~~~
 
 ## Attributes
 
-Please describe any attributes exposed by this stack, and what the default values are. There shouldn't be any attributes without a default value (e.g. no required attributes, sensible defaults).
+Here are attributes exposed by this stack. Please note that you may also override many attributes from the [upstream cookbook](https://github.com/opscode-cookbooks/jenkins).
 
 <table>
   <tr>
@@ -27,10 +24,28 @@ Please describe any attributes exposed by this stack, and what the default value
     <th>Default</th>
   </tr>
   <tr>
-    <td><tt>['jenkinsstack']['bacon']</tt></td>
+    <td><tt>['jenkinsstack']['rax_theme']</tt></td>
     <td>Boolean</td>
-    <td>whether to include bacon</td>
+    <td>whether to include install the Rackspace theme</td>
     <td><tt>true</tt></td>
+  </tr>
+  <tr>
+    <td><tt>['jenkinsstack']['slave']['executors']</tt></td>
+    <td>integer</td>
+    <td>How many executors to configure on each slave</td>
+    <td><tt>6</tt></td>
+  </tr>
+  <tr>
+    <td><tt>['jenkinsstack']['plugins']</tt></td>
+    <td>Array of strings</td>
+    <td>Additional Jenkins plugins to install</td>
+    <td>See [default.rb](attributes/default.rb)</td>
+  </tr>
+  <tr>
+    <td><tt>['jenkinsstack']['packages']</tt></td>
+    <td>Array of strings</td>
+    <td>Additional OS packages to install</td>
+    <td>See [default.rb](attributes/default.rb)</td>
   </tr>
 </table>
 
@@ -38,18 +53,15 @@ Please describe any attributes exposed by this stack, and what the default value
 
 ### jenkinsstack::default
 
-Just sets up jenkins.
-        set up via war file (verified via checksum)
-        using nginx in front of it
-        mail is set up to send out
-        bunch of plugins installed
-        installs a few extra packages
-        sets up jenkins user
-        housekeeping chown
+Nothing. This recipe is empty.
 
-### jenkinsstack::bacon
+### jenkinsstack::master
 
-Please define what the other recipes do as well.
+Configures a Jenkins master. Configures any slaves found using Chef search (slaves are found based on tags used in jenkinsstack::slave).
+
+### jenkinsstack::slave
+
+Configures a Jenkins slave.
 
 ## Contributing
 

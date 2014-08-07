@@ -1,6 +1,6 @@
 #
 # Cookbook Name:: jenkinsstack::acl
-# Recipe:: _find_master
+# Recipe:: _find_slaves
 #
 # Copyright (C) 2014 Rackspace
 # All rights reserved - Do Not Redistribute

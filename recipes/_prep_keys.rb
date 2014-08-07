@@ -60,7 +60,7 @@ if !File.exist?(pkey)
 
 else # otherwise just set variables from existing key
 
-  key = OpenSSL::PKey::RSA.new(File.read("#{pkey}"))
+  key = OpenSSL::PKey::RSA.new(File.read(pkey))
   s_private_key = key.to_pem
   s_public_key  = "#{key.ssh_type} #{[key.to_blob].pack('m0')}"
 

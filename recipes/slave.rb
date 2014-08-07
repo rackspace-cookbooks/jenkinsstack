@@ -38,7 +38,7 @@ include_recipe 'jenkinsstack::_find_master'
 found_master = node.run_state['jenkinsstack_master']
 
 no_master = found_master.nil? || found_master.keys.empty?
-Chef::Log.warn("Did not find a master jenkins node") if no_master
+Chef::Log.warn('Did not find a master jenkins node') if no_master
 
 # find public key
 jenkins_slave_ssh_pubkey = found_master['jenkinsstack']['jenkins_slave_ssh_pubkey']
@@ -55,7 +55,7 @@ template authorized_keys do
   )
   mode 00644
   action :create # create every time. master key could change.
-  only_if { !jenkins_slave_ssh_pubkey.nil? && !jenkins_slave_ssh_pubkey.empty?}
+  only_if { !jenkins_slave_ssh_pubkey.nil? && !jenkins_slave_ssh_pubkey.empty? }
 end
 
 # SSH slaves!

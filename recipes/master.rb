@@ -28,7 +28,7 @@ user node['jenkins']['master']['user'] do
 end
 
 # install plugins and theme
-include_recipe 'jenkinsstack::plugins'
+include_recipe 'jenkinsstack::_plugins'
 
 # create jenkins credential
 jenkins_private_key_credentials node['jenkins']['master']['user'] do
@@ -55,6 +55,7 @@ slaves.each do |slave_name, slave_ip|
     description 'Run builds as slaves'
     remote_fs   '/var/lib/jenkins'
     labels      ['executor']
+    executors   node['jenkinsstack']['slave']['executors']
 
     # SSH specific attributes
     host        slave_ip # or 'slave.example.org'

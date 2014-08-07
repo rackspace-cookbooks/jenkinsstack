@@ -52,4 +52,5 @@ directory "#{node['jenkins']['master']['home']}/.ssh" do
   owner node['jenkins']['master']['user']
   group node['jenkins']['master']['group']
   mode 00700
+  recursive true
 end

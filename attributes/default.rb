@@ -6,7 +6,6 @@
 # Copyright 2014, Rackspace
 #
 
-default['jenkinsstack']['jnlp_port'] = 33_489
 default['jenkinsstack']['rax_theme'] = false
 default['jenkinsstack']['plugins'] = [
   'credentials',
@@ -35,3 +34,5 @@ default['jenkinsstack']['plugins'] = [
 default['jenkinsstack']['packages'] = [
   'git'
 ]
+
+default['jenkinsstack']['slave']['executors'] = 6

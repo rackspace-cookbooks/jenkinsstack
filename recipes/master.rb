@@ -24,7 +24,7 @@ end
 include_recipe 'jenkinsstack::plugins'
 
 # prepare master for slaves
-include_recipe 'jenkinsstack::_prep_ssh_keys'
+include_recipe 'jenkinsstack::_prep_keys'
 
 # find any existing slaves
 include_recipe 'jenkinsstack::_find_slaves'
@@ -37,13 +37,13 @@ end
 slaves.each do |slave_name, slave_ip|
   jenkins_ssh_slave slave_name do
     description 'Run builds as slaves'
-    remote_fs   '/home/jenkins'
+    remote_fs   '/var/lib/jenkins'
     labels      ['executor']
 
     # SSH specific attributes
     host        slave_ip # or 'slave.example.org'
     user        node['jenkins']['master']['user']
-    credentials 'jenkins_slave'
+    credentials node['jenkins']['master']['user']
   end
 end
 

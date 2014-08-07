@@ -9,31 +9,7 @@
 # Run base recipe (apt, java, various settings)
 include_recipe 'jenkinsstack::_base'
 
-# Create the Jenkins user
-user node['jenkins']['master']['user'] do
-  home node['jenkins']['master']['home']
-end
-
-# Create the Jenkins group
-group node['jenkins']['master']['group'] do
-  members node['jenkins']['master']['user']
-end
-
-# Create the home directory
-directory node['jenkins']['master']['home'] do
-  owner node['jenkins']['master']['user']
-  group node['jenkins']['master']['group']
-  mode '0755'
-  recursive true
-end
-
-# Create ~/.ssh directory
-directory "#{node['jenkins']['master']['home']}/.ssh" do
-  owner node['jenkins']['master']['user']
-  group node['jenkins']['master']['group']
-  mode 00700
-end
-
+# find master so we can get pubkey for ssh
 include_recipe 'jenkinsstack::_find_master'
 found_master = node.run_state['jenkinsstack_master']
 

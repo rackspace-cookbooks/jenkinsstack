@@ -12,6 +12,9 @@ include_recipe 'apt'
 node.override['build-essential']['compile_time'] = true
 include_recipe 'build-essential'
 
+# get curl for testing/jenkins stuff
+include_recipe 'curl::default'
+
 # other settings
 node.default['nginx']['default_site_enabled'] = false
 

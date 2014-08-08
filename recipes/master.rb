@@ -20,6 +20,7 @@ s_public_key  = node['jenkinsstack']['jenkins_slave_ssh_pubkey']
 # Pin to 1.555 until JENKINS-22346 is fixed
 # https://issues.jenkins-ci.org/browse/JENKINS-22346
 node.override['jenkins']['master']['version'] = '1.555'
+node.override['jenkins']['master']['runit']['sv_timeout'] = 45
 include_recipe 'jenkins::master'
 
 user node['jenkins']['master']['user'] do

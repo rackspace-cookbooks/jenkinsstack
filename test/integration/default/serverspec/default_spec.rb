@@ -55,7 +55,7 @@ end
 # test with curl here
 describe 'jenkins master' do
   it 'should find the slave node in jenkins' do
-    expect(command 'curl localhost:8080/computer/slave01/load-statistics')
+    expect(command 'sleep 30 && curl localhost:8080/computer/slave01/load-statistics')
     .to return_stdout(/.*<title>slave01 Load Statistics \[Jenkins\]<\/title>.*/)
   end
 end

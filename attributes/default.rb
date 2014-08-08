@@ -6,7 +6,7 @@
 # Copyright 2014, Rackspace
 #
 
-default['jenkinsstack']['rax_theme'] = false
+default['jenkinsstack']['rax_theme'] = true
 default['jenkinsstack']['plugins'] = [
   'credentials',
   'ssh-credentials',

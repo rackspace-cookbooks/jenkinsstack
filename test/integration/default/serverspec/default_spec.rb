@@ -35,10 +35,10 @@ describe file('/var/lib/jenkins/.ssh/id_rsa.pub') do
 end
 
 # theme is currently broken, don't test it, we have it turned off
-# describe file('/var/lib/jenkins/org.codefirst.SimpleThemeDecorator.xml') do
-#   it { should be_file }
-#   it { should contain 'canon-jenkins' }
-# end
+describe file('/var/lib/jenkins/org.codefirst.SimpleThemeDecorator.xml') do
+  it { should be_file }
+  it { should contain 'canon-jenkins' }
+ end
 
 describe port(8080) do
   it { should be_listening }

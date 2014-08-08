@@ -38,7 +38,7 @@ end
 describe file('/var/lib/jenkins/org.codefirst.SimpleThemeDecorator.xml') do
   it { should be_file }
   it { should contain 'canon-jenkins' }
- end
+end
 
 describe port(8080) do
   it { should be_listening }

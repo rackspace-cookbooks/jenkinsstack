@@ -8,7 +8,7 @@
 
 node.default['jenkinsstack']['plugins'].each do |plugin_name|
   jenkins_plugin plugin_name do
-    notifies :restart, 'service[jenkins]', :delayed
+    notifies :restart, 'runit_service[jenkins]', :delayed
   end
 end
 
@@ -18,7 +18,7 @@ template File.join(node['jenkins']['master']['home'], 'org.codefirst.SimpleTheme
   mode 0644
   owner node['jenkins']['master']['user']
   group node['jenkins']['master']['group']
-  notifies :restart, 'service[jenkins]'
+  notifies :restart, 'runit_service[jenkins]'
   action :create_if_missing
   only_if { node['jenkinsstack']['rax_theme'] }
 end

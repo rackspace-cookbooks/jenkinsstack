@@ -1,7 +1,7 @@
 {
   "name": "slave01",
   "tags": "jenkinsstack_slave",
-  "chef_environment": "slave_env",
+  "chef_environment": "_default",
   "json_class": "Chef::Node",
   "automatic": {
     "hostname": "vagrant.vm",

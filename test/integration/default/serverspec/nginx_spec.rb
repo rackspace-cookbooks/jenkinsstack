@@ -15,7 +15,10 @@ end
 
 describe file('/etc/nginx/htpassword') do
   # verify test-kitchen's dummy password made it this far
-  its(:content) { should match(/jenkins:\$apr1\$6lhPrqD8\$8he2vvwmur5YYQi\.dUx7E\./) }
+  it { should be_file }
+  its(:content) { should match(/jenkins:.*/) }
+
+  # unfortunately, the hash algorithm varies, so we can't check further
 end
 
 describe file('/etc/nginx/sites-available/jenkins') do

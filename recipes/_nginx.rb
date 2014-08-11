@@ -27,8 +27,8 @@ end
 
 # Had to allow these both in the key dir, since openssl's LWRP does that
 site_name = 'jenkins'
-key_file = "#{node['nginx_proxy']['ssl_key_dir']}/#{site_name}.key"
-cert_file = "#{node['nginx_proxy']['ssl_certificate_dir']}/#{site_name}.pem"
+key_file = "#{node['nginx']['dir']}/#{site_name}.key"
+cert_file = "#{node['nginx']['dir']}/#{site_name}.pem"
 
 openssl_x509 cert_file do
   common_name node.name
@@ -41,6 +41,8 @@ end
 listen_address = node['jenkins']['master']['listen_address']
 nginx_proxy site_name do
   ssl_key site_name
+  ssl_key_path key_file
+  ssl_certificate_path cert_file
   url "http://#{listen_address}:8080"
   custom_config [
     'auth_basic "Restricted";',

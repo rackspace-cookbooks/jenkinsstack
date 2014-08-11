@@ -20,15 +20,13 @@ node['jenkinsstack']['ruby_gems'].each do |gem_name|
 end
 
 # non login shells
-file "#{node['jenkins']['master']['home']}/.bashrc" do
-  content "rbenv shell #{node['jenkinsstack']['server_ruby']}"
-  owner node['jenkins']['master']['user']
-  group node['jenkins']['master']['group']
+append_if_no_line 'add rbenv to bashrc' do
+  path "#{node['jenkins']['master']['home']}/.bashrc"
+  line "rbenv shell #{node['jenkinsstack']['server_ruby']}"
 end
 
 # login shells
-file "#{node['jenkins']['master']['home']}/.bash_profile" do
-  content "rbenv shell #{node['jenkinsstack']['server_ruby']}"
-  owner node['jenkins']['master']['user']
-  group node['jenkins']['master']['group']
+append_if_no_line 'add rbenv to bash profile' do
+  path "#{node['jenkins']['master']['home']}/.bash_profile"
+  line "rbenv shell #{node['jenkinsstack']['server_ruby']}"
 end

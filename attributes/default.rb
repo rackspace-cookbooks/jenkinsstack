@@ -6,6 +6,7 @@
 # Copyright 2014, Rackspace
 #
 
+default['jenkinsstack']['proxy_password'] = nil
 default['jenkinsstack']['nginx_proxy'] = true
 default['jenkinsstack']['rax_theme'] = true
 default['jenkinsstack']['plugins'] = [

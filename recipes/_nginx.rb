@@ -13,6 +13,18 @@
 
 include_recipe 'nginx-proxy::setup'
 
+password_for_proxy = node['jenkinsstack']['proxy_password']
+if password_for_proxy.nil? || password_for_proxy.empty?
+  ::Chef::Recipe.send(:include, Opscode::OpenSSL::Password)
+  password_for_proxy = secure_password
+  node.set['jenkinsstack']['proxy_password'] = password_for_proxy
+end
+
+htpasswd "#{node['nginx']['dir']}/htpassword" do
+  user 'jenkins'
+  password password_for_proxy
+end
+
 # Had to allow these both in the key dir, since openssl's LWRP does that
 site_name = 'jenkins'
 key_file = "#{node['nginx_proxy']['ssl_key_dir']}/#{site_name}.key"
@@ -26,7 +38,12 @@ openssl_x509 cert_file do
   key_file key_file
 end
 
+listen_address = node['jenkins']['master']['listen_address']
 nginx_proxy site_name do
   ssl_key site_name
-  url 'http://127.0.01:8080'
+  url "http://#{listen_address}:8080"
+  custom_config [
+    'auth_basic "Restricted";',
+    "auth_basic_user_file #{node['nginx']['dir']}/htpassword;"
+  ]
 end

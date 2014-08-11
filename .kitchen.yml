@@ -37,6 +37,8 @@ provisioner:
       cloud_credentials:
         username: 'racker'
         api_key: 'sekrit'
+    jenkinsstack:
+      proxy_password: 'testingonly'
 
 platforms:
   - name: ubuntu-12.04

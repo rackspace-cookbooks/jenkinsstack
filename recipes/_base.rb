@@ -43,6 +43,7 @@ include_recipe 'jenkins::java'
 # Create the Jenkins user
 user node['jenkins']['master']['user'] do
   home node['jenkins']['master']['home']
+  shell '/bin/bash'
 end
 
 # Create the Jenkins group

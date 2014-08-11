@@ -8,9 +8,7 @@ See CHANGELOG.md for additional information about changes to this stack over tim
 
 ## Supported Platforms
 
-Ubuntu 12.04
-
-~~~CentOS 6.5~~~
+Ubuntu 12.04, Ubuntu 14.04, CentOS 6.5
 
 ## Attributes
 
@@ -47,6 +45,18 @@ Here are attributes exposed by this stack. Please note that you may also overrid
     <td>Additional OS packages to install</td>
     <td>See [default.rb](attributes/default.rb)</td>
   </tr>
+  <tr>
+    <td><tt>['jenkinsstack']['server_ruby']</tt></td>
+    <td>String</td>
+    <td>Version of ruby to install and configure for jenkins user</td>
+    <td>`1.9.3-p484`</td>
+  </tr>
+  <tr>
+    <td><tt>['jenkinsstack']['ruby_gems']</tt></td>
+    <td>Array of strings</td>
+    <td>Additional Ruby gems packages to install</td>
+    <td>[`'bundler'`, `'test-kitchen'`]</td>
+  </tr>
 </table>
 
 ## Usage
@@ -62,6 +72,10 @@ Configures a Jenkins master. Configures any slaves found using Chef search (slav
 ### jenkinsstack::slave
 
 Configures a Jenkins slave.
+
+### jenkinsstack::ruby
+
+Configures ruby with version `node['jenkinsstack']['server_ruby']` and gems from `['jenkinsstack']['ruby_gems']`. This recipe must be included separately, and is intended to help configure a build environment that uses bundler to run things like rake or test-kitchen.
 
 ## Contributing
 

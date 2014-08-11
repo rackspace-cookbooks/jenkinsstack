@@ -3,12 +3,12 @@ describe package('nginx') do
   it { should be_installed }
 end
 
-describe file('/etc/ssl/private/jenkins.key') do
+describe file('/etc/nginx/jenkins.key') do
   it { should be_file }
   its(:content) { should match(/BEGIN RSA PRIVATE KEY/) }
 end
 
-describe file('/etc/ssl/certs/jenkins.pem') do
+describe file('/etc/nginx/jenkins.pem') do
   it { should be_file }
   its(:content) { should match(/BEGIN CERTIFICATE/) }
 end

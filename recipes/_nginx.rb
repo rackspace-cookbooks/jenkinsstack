@@ -27,8 +27,8 @@ end
 
 # Had to allow these both in the key dir, since openssl's LWRP does that
 site_name = 'jenkins'
-key_file = "#{node['nginx_proxy']['ssl_key_dir']}/#{site_name}.key"
-cert_file = "#{node['nginx_proxy']['ssl_certificate_dir']}/#{site_name}.pem"
+key_file = "#{node['nginx']['dir']}/#{site_name}.key"
+cert_file = "#{node['nginx']['dir']}/#{site_name}.pem"
 
 openssl_x509 cert_file do
   common_name node.name

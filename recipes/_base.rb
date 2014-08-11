@@ -20,7 +20,7 @@ node.default['nginx']['default_site_enabled'] = false
 
 # jenkins settings
 node.default['jenkins']['master']['jvm_options'] = '-XX:MaxPermSize=512m'
-node.default['jenkins']['master']['listen_address'] = '0.0.0.0'
+node.default['jenkins']['master']['listen_address'] = '127.0.0.1'
 
 # The following attributes need to match.  The first is the jenkins.war version to download from
 # http://mirrors.jenkins-ci.org/war/ and the second is the sha256 hash of the file to prevent download

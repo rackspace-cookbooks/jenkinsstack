@@ -50,6 +50,10 @@ platforms:
 
 suites:
   - name: default
-    run_list: recipe[jenkinsstack::master]
+    run_list:
+      - recipe[jenkinsstack::master]
+      - recipe[jenkinsstack::ruby]
   - name: slave
-    run_list: recipe[jenkinsstack::slave]
+    run_list:
+      - recipe[jenkinsstack::slave]
+      - recipe[jenkinsstack::ruby]

@@ -31,6 +31,11 @@ default['jenkinsstack']['plugins'] = [
   'simple-theme-plugin'
 ]
 
+default['jenkinsstack']['server_ruby'] = '1.9.3-p484'
+default['jenkinsstack']['ruby_gems'] = [
+  'bundler'
+]
+
 default['jenkinsstack']['packages'] = [
   'git'
 ]

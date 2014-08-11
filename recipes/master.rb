@@ -71,4 +71,5 @@ if node['jenkinsstack']['nginx_proxy']
   include_recipe 'jenkinsstack::_nginx'
 end
 
+tag('jenkinsstack')
 tag('jenkinsstack_master')

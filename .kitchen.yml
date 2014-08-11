@@ -56,7 +56,9 @@ suites:
     run_list:
       - recipe[jenkinsstack::master]
       - recipe[jenkinsstack::ruby]
+      - recipe[jenkinsstack::find_all]
   - name: slave
     run_list:
       - recipe[jenkinsstack::slave]
       - recipe[jenkinsstack::ruby]
+      - recipe[jenkinsstack::find_all]

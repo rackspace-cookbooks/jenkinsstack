@@ -83,9 +83,9 @@ Configures a Jenkins slave.
 
 Configures ruby with version `node['jenkinsstack']['server_ruby']` and gems from `['jenkinsstack']['ruby_gems']`. This recipe must be included separately, and is intended to help configure a build environment that uses bundler to run things like rake or test-kitchen.
 
-### jenkinsstack::acl
+### jenkinsstack::find_all
 
-Adds IP tables rules for SSH (22), HTTP (80), and HTTPS (443).
+Used to populate `['jenkinsstack']['all']` for wrapper cookbooks. Aids in writing IP tables rules for SSH (22), HTTP (80), and HTTPS (443).
 
 ### jenkinsstack::_nginx
 

@@ -15,7 +15,7 @@ end
 
 describe file('/etc/nginx/htpassword') do
   # verify test-kitchen's dummy password made it this far
-  its(:content) { should match(/jenkins:$apr1$6lhPrqD8$8he2vvwmur5YYQi.dUx7E./) }
+  its(:content) { should match(/jenkins:\$apr1\$6lhPrqD8\$8he2vvwmur5YYQi\.dUx7E\./) }
 end
 
 describe file('/etc/nginx/sites-available/jenkins') do

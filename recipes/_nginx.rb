@@ -41,6 +41,8 @@ end
 listen_address = node['jenkins']['master']['listen_address']
 nginx_proxy site_name do
   ssl_key site_name
+  ssl_key_path key_file
+  ssl_certificate_path cert_file
   url "http://#{listen_address}:8080"
   custom_config [
     'auth_basic "Restricted";',

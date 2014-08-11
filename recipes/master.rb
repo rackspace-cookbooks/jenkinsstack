@@ -65,4 +65,11 @@ slaves.each do |slave_name, slave_ip|
   end
 end
 
+# trivial protection for the jenkins web interface, wrapper/app cookbooks
+# should be disabling this and doing their own thing
+if node['jenkinsstack']['nginx_proxy']
+  include_recipe 'jenkinsstack::_nginx'
+end
+
+tag('jenkinsstack')
 tag('jenkinsstack_master')

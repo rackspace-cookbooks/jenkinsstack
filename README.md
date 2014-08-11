@@ -22,6 +22,12 @@ Here are attributes exposed by this stack. Please note that you may also overrid
     <th>Default</th>
   </tr>
   <tr>
+    <td><tt>['jenkinsstack']['nginx_proxy']</tt></td>
+    <td>Boolean</td>
+    <td>whether to configure a locked-down nginx proxy in front of jenkins (mostly for testing. real customers will want specific security.)</td>
+    <td><tt>true</tt></td>
+  </tr>  
+  <tr>
     <td><tt>['jenkinsstack']['rax_theme']</tt></td>
     <td>Boolean</td>
     <td>whether to include install the Rackspace theme</td>
@@ -76,6 +82,14 @@ Configures a Jenkins slave.
 ### jenkinsstack::ruby
 
 Configures ruby with version `node['jenkinsstack']['server_ruby']` and gems from `['jenkinsstack']['ruby_gems']`. This recipe must be included separately, and is intended to help configure a build environment that uses bundler to run things like rake or test-kitchen.
+
+### jenkinsstack::find_all
+
+Used to populate `['jenkinsstack']['all']` for wrapper cookbooks. Aids in writing IP tables rules for SSH (22), HTTP (80), and HTTPS (443).
+
+### jenkinsstack::_nginx
+
+Normally, there wouldn't be a call out for recipes just used within in the cookbook, but this one bears specific notes. It configures an nginx reverse proxy with basic auth over a self-signed SSL certificate. You will almost certainly want to configure something specific to an app cookbook or customer to listen on 80/443 and proxy to :8080 with appropriate SSL certificates and configuring appropriate authentication for jenkins (these are defaults). Note that by default, jenkins ***does not*** secure itself. You should ***immediately*** login to a new jenkins master and turn on a specific authentication method, even if it is simply the builtin. This recipe prevents needing to do that for most testing and development work with test-kitchen.
 
 ## Contributing
 

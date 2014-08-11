@@ -35,4 +35,5 @@ template authorized_keys do
 end
 
 # SSH slaves!
+tag('jenkinsstack')
 tag('jenkinsstack_slave')

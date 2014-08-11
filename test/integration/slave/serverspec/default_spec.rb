@@ -2,9 +2,6 @@
 
 require_relative 'spec_helper'
 
-# test the ruby stuff that is the same on default (jenkins master)
-require 'default/serverspec/ruby_spec'
-
 describe user('jenkins') do
   it { should exist }
   it { should belong_to_group 'jenkins' }

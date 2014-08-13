@@ -36,8 +36,6 @@ node['jenkinsstack']['packages'].each do |pkg|
   end
 end
 
-include_recipe 'jenkins::java'
-
 ## Hate to do these creates here, but we want them to exist before installing
 ## Jenkins as the keys created are used on jenkins setup
 # Create the Jenkins user

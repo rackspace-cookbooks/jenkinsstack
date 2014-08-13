@@ -54,11 +54,13 @@ platforms:
 suites:
   - name: default
     run_list:
+      - recipe[jenkinsstack::java]
       - recipe[jenkinsstack::master]
       - recipe[jenkinsstack::ruby]
       - recipe[jenkinsstack::find_all]
   - name: slave
     run_list:
+      - recipe[jenkinsstack::java]
       - recipe[jenkinsstack::slave]
       - recipe[jenkinsstack::ruby]
       - recipe[jenkinsstack::find_all]

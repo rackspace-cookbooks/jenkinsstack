@@ -71,6 +71,10 @@ Here are attributes exposed by this stack. Please note that you may also overrid
 
 Nothing. This recipe is empty.
 
+### jenkinsstack::java
+
+Calls the jenkins cookbook's java recipe.
+
 ### jenkinsstack::master
 
 Configures a Jenkins master. Configures any slaves found using Chef search (slaves are found based on tags used in jenkinsstack::slave).

@@ -13,7 +13,7 @@ include_recipe 'chef-sugar'
 include_recipe 'jenkinsstack::_base'
 
 # prepare keys for master and slaves, set handy variables
-include_recipe 'jenkinsstack::_prep_keys'
+include_recipe('jenkinsstack::_prep_keys')
 s_private_key = node.run_state['jenkinsstack_private_key']
 s_public_key  = node['jenkinsstack']['jenkins_slave_ssh_pubkey']
 

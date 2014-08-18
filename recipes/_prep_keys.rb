@@ -47,7 +47,18 @@ prepare_keys = ruby_block 'prepare_keys' do # ~FC014
     d.recursive true
     d.run_action :create
 
-    unless File.exist?(pkey)
+    if File.exist?(pkey)
+      # just set variables from existing keys
+      key = OpenSSL::PKey::RSA.new(File.read(pkey))
+      s_private_key = key.to_pem
+
+      # needed every run for creating credentials object in jenkins
+      node.run_state['jenkinsstack_private_key'] = s_private_key
+
+      # only populate if they already existed (else first run breaks)
+      node.run_state[:jenkins_private_key_path] = pkey
+      node.run_state[:jenkins_private_key] = s_private_key
+    else
       # Generate a keypair with Ruby
       sshkey = SSHKey.generate(
         type: 'RSA',
@@ -85,18 +96,6 @@ prepare_keys = ruby_block 'prepare_keys' do # ~FC014
       s.variables ssh_public_key: sshkey.ssh_public_key
       s.mode 00644
       s.run_action :create
-    else
-      # just set variables from existing keys
-      key = OpenSSL::PKey::RSA.new(File.read(pkey))
-      s_private_key = key.to_pem
-
-      # needed every run for creating credentials object in jenkins
-      node.run_state['jenkinsstack_private_key'] = s_private_key
-
-      # only populate if they already existed (else first run breaks)
-      node.run_state[:jenkins_private_key_path] = pkey
-      node.run_state[:jenkins_private_key] = s_private_key
-
     end # end file exists
   end
   action :nothing

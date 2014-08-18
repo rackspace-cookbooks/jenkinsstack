@@ -25,7 +25,7 @@ pkey = node['jenkins']['master']['home'] + '/.ssh/id_rsa'
 
 # this should happen at compile time, or the upstream jenkins cookbook's ruby
 # code will fail to find these keys we setup
-prepare_keys = ruby_block 'prepare_keys' do
+prepare_keys = ruby_block 'prepare_keys' do # ~FC014
   block do
 
     # Create the Jenkins user
@@ -47,7 +47,7 @@ prepare_keys = ruby_block 'prepare_keys' do
     d.recursive true
     d.run_action :create
 
-    if !File.exist?(pkey)
+    unless File.exist?(pkey)
       # Generate a keypair with Ruby
       sshkey = SSHKey.generate(
         type: 'RSA',
@@ -73,16 +73,6 @@ prepare_keys = ruby_block 'prepare_keys' do
       s.variables ssh_public_key: sshkey.ssh_public_key
       s.mode 00644
       s.run_action :create
-
-      s_private_key = sshkey.private_key.to_s
-      s_public_key  = sshkey.ssh_public_key.to_s
-
-      node.set['jenkinsstack']['jenkins_slave_ssh_pubkey'] = s_public_key
-      node.save unless Chef::Config['solo']
-
-      node.run_state['jenkinsstack_private_key'] = s_private_key
-      node.run_state[:jenkins_private_key_path] = pkey
-      node.run_state[:jenkins_private_key] = s_private_key
     end # end file exists
 
     # just set variables from existing keys
@@ -90,23 +80,17 @@ prepare_keys = ruby_block 'prepare_keys' do
     s_private_key = key.to_pem
     s_public_key  = "#{key.ssh_type} #{[key.to_blob].pack('m0')}"
 
+    # save for using in our ssh configuration for slaves
+    node.set['jenkinsstack']['jenkins_slave_ssh_pubkey'] = s_public_key
+    node.save unless Chef::Config['solo']
+
+    # save for jenkins cookbook to use in cli auth later
     node.run_state['jenkinsstack_private_key'] = s_private_key
     node.run_state[:jenkins_private_key_path] = pkey
     node.run_state[:jenkins_private_key] = s_private_key
-    x = s_private_key
-    Chef::Log.warn("Setting run state now in _prep_keys")
   end
   action :nothing
 end
 
 # now, do it now!
 prepare_keys.run_action(:run)
-
-# gather these one more time for the cookbook convergence
-key = OpenSSL::PKey::RSA.new(File.read(pkey))
-s_private_key = key.to_pem
-s_public_key  = "#{key.ssh_type} #{[key.to_blob].pack('m0')}"
-
-node.run_state['jenkinsstack_private_key'] = s_private_key
-node.run_state[:jenkins_private_key_path] = pkey
-node.run_state[:jenkins_private_key] = s_private_key

@@ -61,6 +61,8 @@ prepare_keys = ruby_block 'prepare_keys' do # ~FC014
 
       node.set['jenkinsstack']['jenkins_slave_ssh_pubkey'] = s_public_key
       node.save unless Chef::Config['solo']
+
+      # needed every run for creating credentials object in jenkins
       node.run_state['jenkinsstack_private_key'] = s_private_key
 
       # first time when no file exists, just create them from templates
@@ -88,9 +90,13 @@ prepare_keys = ruby_block 'prepare_keys' do # ~FC014
       key = OpenSSL::PKey::RSA.new(File.read(pkey))
       s_private_key = key.to_pem
 
+      # needed every run for creating credentials object in jenkins
+      node.run_state['jenkinsstack_private_key'] = s_private_key
+
       # only populate if they already existed (else first run breaks)
       node.run_state[:jenkins_private_key_path] = pkey
       node.run_state[:jenkins_private_key] = s_private_key
+
     end # end file exists
   end
   action :nothing

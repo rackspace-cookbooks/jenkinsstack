@@ -53,7 +53,17 @@ prepare_keys = ruby_block 'prepare_keys' do # ~FC014
         type: 'RSA',
         comment: "#{node['jenkins']['master']['user']}@#{node['jenkins']['master']['host']}"
       )
+      key = OpenSSL::PKey::RSA.new(sshkey.private_key)
 
+      # save for using in our ssh configuration for slaves
+      s_public_key  = "#{key.ssh_type} #{[key.to_blob].pack('m0')}"
+      s_private_key = key.to_pem
+
+      node.set['jenkinsstack']['jenkins_slave_ssh_pubkey'] = s_public_key
+      node.save unless Chef::Config['solo']
+      node.run_state['jenkinsstack_private_key'] = s_private_key
+
+      # first time when no file exists, just create them from templates
       r = Chef::Resource::Template.new(pkey, run_context)
       r.path pkey
       r.owner node['jenkins']['master']['user']
@@ -73,21 +83,15 @@ prepare_keys = ruby_block 'prepare_keys' do # ~FC014
       s.variables ssh_public_key: sshkey.ssh_public_key
       s.mode 00644
       s.run_action :create
+    else
+      # just set variables from existing keys
+      key = OpenSSL::PKey::RSA.new(File.read(pkey))
+      s_private_key = key.to_pem
+
+      # only populate if they already existed (else first run breaks)
+      node.run_state[:jenkins_private_key_path] = pkey
+      node.run_state[:jenkins_private_key] = s_private_key
     end # end file exists
-
-    # just set variables from existing keys
-    key = OpenSSL::PKey::RSA.new(File.read(pkey))
-    s_private_key = key.to_pem
-    s_public_key  = "#{key.ssh_type} #{[key.to_blob].pack('m0')}"
-
-    # save for using in our ssh configuration for slaves
-    node.set['jenkinsstack']['jenkins_slave_ssh_pubkey'] = s_public_key
-    node.save unless Chef::Config['solo']
-
-    # save for jenkins cookbook to use in cli auth later
-    node.run_state['jenkinsstack_private_key'] = s_private_key
-    node.run_state[:jenkins_private_key_path] = pkey
-    node.run_state[:jenkins_private_key] = s_private_key
   end
   action :nothing
 end

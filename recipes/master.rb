@@ -28,19 +28,19 @@ user node['jenkins']['master']['user'] do
   action :manage
 end
 
+# Create jenkins auth user, this enables auth for further actions
+jenkins_user 'chef' do
+  public_keys [s_public_key]
+end
+
 # install plugins and theme
 include_recipe 'jenkinsstack::_plugins'
 
-# create jenkins credential
+# create jenkins credential, useful to ssh to slaves
 jenkins_private_key_credentials node['jenkins']['master']['user'] do
   username node['jenkins']['master']['user']
   description 'Jenkins Slave SSH Key'
   private_key s_private_key
-end
-
-# Create jenkins auth user
-jenkins_user 'chef' do
-  public_keys [s_public_key]
 end
 
 # find any existing slaves

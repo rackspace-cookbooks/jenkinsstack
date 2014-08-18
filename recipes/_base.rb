@@ -26,8 +26,8 @@ node.default['jenkins']['master']['listen_address'] = '127.0.0.1'
 # http://mirrors.jenkins-ci.org/war/ and the second is the sha256 hash of the file to prevent download
 # of the war file on every Chef run.
 # comment out old version --
-# node.default['jenkins']['master']['version']      = '1.571'
-# node.default['jenkins']['master']['checksum'] = '312d0a3fa6a394e2c9e6d31042b7db70674eb3abb3a431a41390fef97db0f9f4'
+node.default['jenkins']['master']['version']      = '1.555'
+node.default['jenkins']['master']['checksum'] = '31f5c2a3f7e843f7051253d640f07f7c24df5e9ec271de21e92dac0d7ca19431'
 node.default['jenkins']['master']['install_method'] = 'war'
 
 node['jenkinsstack']['packages'].each do |pkg|
@@ -36,8 +36,9 @@ node['jenkinsstack']['packages'].each do |pkg|
   end
 end
 
-## Hate to do these creates here, but we want them to exist before installing
-## Jenkins as the keys created are used on jenkins setup
+# Hate to do these creates here, since they are also on _prep_keys, but slaves
+# need them too.
+
 # Create the Jenkins user
 user node['jenkins']['master']['user'] do
   home node['jenkins']['master']['home']

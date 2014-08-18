@@ -23,59 +23,83 @@ require 'sshkey'
 # Base location of ssh key
 pkey = node['jenkins']['master']['home'] + '/.ssh/id_rsa'
 
-# if the keys don't exist, create them using templates, and set variables
-if !File.exist?(pkey)
-  # Generate a keypair with Ruby
-  sshkey = SSHKey.generate(
-    type: 'RSA',
-    comment: "#{node['jenkins']['master']['user']}@#{node['jenkins']['master']['host']}"
-  )
-
-  # Store private key on disk
-  template pkey do
-    owner node['jenkins']['master']['user']
-    group node['jenkins']['master']['group']
-    source 'id_rsa.erb'
-    variables(
-      ssh_private_key: sshkey.private_key
-    )
-    mode 00600
-    action :create_if_missing
-  end
-
-  # Store public key on disk
-  template "#{pkey}.pub" do
-    owner node['jenkins']['master']['user']
-    group node['jenkins']['master']['group']
-    source 'id_rsa.pub.erb'
-    variables(
-      ssh_public_key: sshkey.ssh_public_key
-    )
-    mode 00644
-    action :create_if_missing
-  end
-
-  s_private_key = sshkey.private_key.to_s
-  s_public_key  = sshkey.ssh_public_key.to_s
-
-else # otherwise just set variables from existing key
-
-  key = OpenSSL::PKey::RSA.new(File.read(pkey))
-  s_private_key = key.to_pem
-  s_public_key  = "#{key.ssh_type} #{[key.to_blob].pack('m0')}"
-
-end
-
-# Save public key to chef-server as jenkins_slave_ssh_pubkey
-ruby_block 'node-save-pubkey' do
+# this should happen at compile time, or the upstream jenkins cookbook's ruby
+# code will fail to find these keys we setup
+prepare_keys = ruby_block 'prepare_keys' do # ~FC014
   block do
-    node.set['jenkinsstack']['jenkins_slave_ssh_pubkey'] = s_public_key
-    node.save unless Chef::Config['solo']
+
+    # Create the Jenkins user
+    u = Chef::Resource::User.new(node['jenkins']['master']['user'], run_context)
+    u.home node['jenkins']['master']['home']
+    u.shell '/bin/bash'
+    u.run_action :create
+
+    # Create the Jenkins group
+    g = Chef::Resource::Group.new(node['jenkins']['master']['group'], run_context)
+    g.members node['jenkins']['master']['user']
+    g.run_action :create
+
+    # create .ssh dir for jenkins
+    d = Chef::Resource::Directory.new("#{node['jenkins']['master']['home']}/.ssh", run_context)
+    d.owner node['jenkins']['master']['user']
+    d.group node['jenkins']['master']['group']
+    d.mode 00700
+    d.recursive true
+    d.run_action :create
+
+    if File.exist?(pkey)
+      # just set variables from existing keys
+      key = OpenSSL::PKey::RSA.new(File.read(pkey))
+      s_private_key = key.to_pem
+
+      # needed every run for creating credentials object in jenkins
+      node.run_state['jenkinsstack_private_key'] = s_private_key
+
+      # only populate if they already existed (else first run breaks)
+      node.run_state[:jenkins_private_key_path] = pkey
+      node.run_state[:jenkins_private_key] = s_private_key
+    else
+      # Generate a keypair with Ruby
+      sshkey = SSHKey.generate(
+        type: 'RSA',
+        comment: "#{node['jenkins']['master']['user']}@#{node['jenkins']['master']['host']}"
+      )
+      key = OpenSSL::PKey::RSA.new(sshkey.private_key)
+
+      # save for using in our ssh configuration for slaves
+      s_public_key  = "#{key.ssh_type} #{[key.to_blob].pack('m0')}"
+      s_private_key = key.to_pem
+
+      node.set['jenkinsstack']['jenkins_slave_ssh_pubkey'] = s_public_key
+      node.save unless Chef::Config['solo']
+
+      # needed every run for creating credentials object in jenkins
+      node.run_state['jenkinsstack_private_key'] = s_private_key
+
+      # first time when no file exists, just create them from templates
+      r = Chef::Resource::Template.new(pkey, run_context)
+      r.path pkey
+      r.owner node['jenkins']['master']['user']
+      r.group node['jenkins']['master']['group']
+      r.cookbook 'jenkinsstack'
+      r.source 'id_rsa.erb'
+      r.variables  ssh_private_key: sshkey.private_key
+      r.mode 00600
+      r.run_action :create
+
+      s = Chef::Resource::Template.new("#{pkey}.pub", run_context)
+      s.path "#{pkey}.pub"
+      s.owner node['jenkins']['master']['user']
+      s.group node['jenkins']['master']['group']
+      s.cookbook 'jenkinsstack'
+      s.source 'id_rsa.pub.erb'
+      s.variables ssh_public_key: sshkey.ssh_public_key
+      s.mode 00644
+      s.run_action :create
+    end # end file exists
   end
+  action :nothing
 end
 
-# Set the private key on the Jenkins executor in ruby, and at compile time.
-node.run_state['jenkinsstack_private_key'] = s_private_key
-ruby_block 'set private key' do
-  block { node.run_state['jenkinsstack_private_key'] = s_private_key }
-end
+# now, do it now!
+prepare_keys.run_action(:run)

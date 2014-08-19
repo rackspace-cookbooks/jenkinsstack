@@ -30,7 +30,8 @@ default['jenkinsstack']['plugins'] = [
   'parameterized-trigger',
   'build-pipeline-plugin',
   'jclouds-jenkins',
-  'simple-theme-plugin'
+  'simple-theme-plugin',
+  'warnings'
 ]
 
 default['jenkinsstack']['server_ruby'] = '1.9.3-p484'

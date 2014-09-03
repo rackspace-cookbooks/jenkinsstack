@@ -55,6 +55,11 @@ prepare_keys = ruby_block 'prepare_keys' do # ~FC014
       # needed every run for creating credentials object in jenkins
       node.run_state['jenkinsstack_private_key'] = s_private_key
 
+      # update pub key as well
+      s_public_key  = "#{key.ssh_type} #{[key.to_blob].pack('m0')}"
+      node.set['jenkinsstack']['jenkins_slave_ssh_pubkey'] = s_public_key
+      node.save unless Chef::Config['solo']
+
       # only populate if they already existed (else first run breaks)
       node.run_state[:jenkins_private_key_path] = pkey
       node.run_state[:jenkins_private_key] = s_private_key

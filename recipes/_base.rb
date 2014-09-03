@@ -31,7 +31,6 @@ node.default['jenkins']['master']['version']      = '1.555'
 node.default['jenkins']['master']['checksum'] = '31f5c2a3f7e843f7051253d640f07f7c24df5e9ec271de21e92dac0d7ca19431'
 node.default['jenkins']['master']['source'] = "#{node['jenkins']['master']['mirror']}/war/#{node['jenkins']['master']['version']}/jenkins.war"
 
-
 node['jenkinsstack']['packages'].each do |pkg|
   package pkg do
     action :install

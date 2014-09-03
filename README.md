@@ -2,6 +2,10 @@
 
 Stack used to configure a jenkins master and any number of jenkins slaves. By default, the stack uses SSH slaves (master initiated) as opposed to JNLP slaves (slave initiated). The master generates a private key that is used for jenkins authentication as well as passwordless SSH from master to slaves.
 
+## Disclaimers
+
+Changing of Jenkins SSH key pairs should be considered unsupported.  If a specific SSH key is desired, please add this before the initial buildout.  It is possible to manually change this, but it does require manual changes on the server.
+
 ## [Changelog](CHANGELOG.md)
 
 See CHANGELOG.md for additional information about changes to this stack over time.

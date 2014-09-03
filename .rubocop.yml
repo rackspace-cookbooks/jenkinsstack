@@ -37,3 +37,8 @@ WordArray:
 # Don't complain about unused block args
 UnusedBlockArgument:
   Enabled: false
+
+# Don't complain about Guardfile
+AllCops:
+  Exclude:
+    - 'Guardfile'

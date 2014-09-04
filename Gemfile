@@ -9,6 +9,8 @@ end
 group :unit do
   gem 'berkshelf', '~> 3'
   gem 'chefspec'
+  gem 'chef-sugar'
+  gem 'sshkey'
   gem 'vagrant-wrapper'
 end
 

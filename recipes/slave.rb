@@ -17,7 +17,7 @@ no_master = found_master.nil? || found_master.keys.empty?
 Chef::Log.warn('Did not find a master jenkins node') if no_master
 
 # find public key
-jenkins_slave_ssh_pubkey = found_master['jenkinsstack']['jenkins_slave_ssh_pubkey']
+jenkins_slave_ssh_pubkey = found_master.nil? ? nil : found_master['jenkinsstack']['jenkins_slave_ssh_pubkey']
 no_key = jenkins_slave_ssh_pubkey.nil? || jenkins_slave_ssh_pubkey.empty?
 Chef::Log.warn("Did not find a public SSH key needed for master #{found_master} to authenticate") if no_key && !no_master
 

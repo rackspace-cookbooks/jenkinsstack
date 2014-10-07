@@ -13,17 +13,14 @@ include_recipe 'jenkinsstack::_base'
 include_recipe 'jenkinsstack::_find_master'
 found_master = node.run_state['jenkinsstack_master']
 
-no_master = found_master.nil? || found_master.keys.empty?
-Chef::Log.warn('Did not find a master jenkins node') if no_master
+jenkins_slave_ssh_pubkey = found_master &&
+                           found_master['jenkinsstack'] &&
+                           found_master['jenkinsstack']['jenkins_slave_ssh_pubkey']
 
-# find public key
-jenkins_slave_ssh_pubkey = found_master.nil? ? nil : found_master['jenkinsstack']['jenkins_slave_ssh_pubkey']
-no_key = jenkins_slave_ssh_pubkey.nil? || jenkins_slave_ssh_pubkey.empty?
-Chef::Log.warn("Did not find a public SSH key needed for master #{found_master} to authenticate") if no_key && !no_master
+Chef::Log.warn("Did not find a master or master's public SSH key needed to authenticate") unless jenkins_slave_ssh_pubkey
 
 # Store public key on disk
-authorized_keys = node['jenkins']['master']['home'] + '/.ssh/authorized_keys'
-template authorized_keys do
+template "#{node['jenkins']['master']['home']}/.ssh/authorized_keys" do
   owner node['jenkins']['master']['user']
   group node['jenkins']['master']['group']
   variables(
@@ -31,7 +28,7 @@ template authorized_keys do
   )
   mode 00644
   action :create # create every time. master key could change.
-  only_if { !jenkins_slave_ssh_pubkey.nil? && !jenkins_slave_ssh_pubkey.empty? }
+  only_if { jenkins_slave_ssh_pubkey }
 end
 
 # SSH slaves!

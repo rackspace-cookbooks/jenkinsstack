@@ -53,9 +53,8 @@ describe process('java') do
 end
 
 # test with curl here
-describe 'jenkins master' do
-  it 'should find the slave node in jenkins' do
-    expect(command 'sleep 30 && curl localhost:8080/computer/slave01/load-statistics')
-    .to return_stdout(/.*<title>slave01 Load Statistics \[Jenkins\]<\/title>.*/)
+describe 'jenkins master should be configured for one slave node' do
+  describe command('sleep 30 && curl localhost:8080/computer/slave01/load-statistics') do
+    its(:stdout) { should match(/.*<title>slave01 Load Statistics \[Jenkins\]<\/title>.*/) }
   end
 end

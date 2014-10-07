@@ -5,7 +5,12 @@ require_relative 'spec_helper'
 describe 'jenkinsstack::master' do
   before { stub_resources }
   describe 'ubuntu' do
-    let(:chef_run) { ChefSpec::Runner.new.converge(described_recipe) }
+    let(:chef_run) do
+      ChefSpec::Runner.new do |node|
+        node.set[:runit][:sv_bin] = '/usr/bin/sv'
+        node.run_state[:jenkinsstack_private_key] = 'foo'
+      end.converge(described_recipe)
+    end
 
     it 'apt-get updates' do
       expect(chef_run).to execute_command 'apt-get update'.at_compile_time
@@ -28,7 +33,12 @@ describe 'jenkinsstack::master' do
   end
 
   describe 'centos' do
-    let(:chef_run) { ChefSpec::Runner.new.converge(described_recipe) }
+    let(:chef_run) do
+      ChefSpec::Runner.new do |node|
+        node.set[:runit][:sv_bin] = '/usr/bin/sv'
+        node.set[:jenkinsstack_private_key] = 'foo'
+      end.converge(described_recipe)
+    end
 
     it 'includes recipes' do
       expect(chef_run).to include_recipe('build-essential::default')

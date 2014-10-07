@@ -38,7 +38,7 @@ WordArray:
 UnusedBlockArgument:
   Enabled: false
 
-# Don't complain about Guardfile
 AllCops:
-  Exclude:
-    - 'Guardfile'
+  Include:
+    - '**/metadata.rb'
+    - '**/*.rb'

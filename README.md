@@ -1,5 +1,7 @@
 # jenkinsstack
 
+Ignore me.
+
 Stack used to configure a jenkins master and any number of jenkins slaves. By default, the stack uses SSH slaves (master initiated) as opposed to JNLP slaves (slave initiated). The master generates a private key that is used for jenkins authentication as well as passwordless SSH from master to slaves.
 
 ## Disclaimers

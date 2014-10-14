@@ -67,7 +67,6 @@ if node['jenkinsstack']['nginx_proxy']
 end
 
 # Add ELK stack logging, if we are logging to elkstack
-fail "logging was false" unless node.deep_fetch('platformstack', 'elkstack_logging', 'enabled')
 if node.deep_fetch('platformstack', 'elkstack_logging', 'enabled')
   # ensure platformstack's logging is already done
   include_recipe 'platformstack::logging'

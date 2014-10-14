@@ -6,20 +6,21 @@ describe 'jenkinsstack::master' do
   before { stub_resources }
   describe 'ubuntu' do
     let(:chef_run) do
-      ChefSpec::Runner.new do |node|
-        node.set[:runit][:sv_bin] = '/usr/bin/sv'
-        node.run_state[:jenkinsstack_private_key] = 'foo'
-      end.converge(described_recipe)
-    end
+      ChefSpec::Runner.new(platform: 'ubuntu', version: '12.04') do |node|
+        # Setup system attributes
+        node.set['memory']['total'] = 2048
+        node.set['cpu']['total'] = 2
 
-    it 'apt-get updates' do
-      expect(chef_run).to execute_command 'apt-get update'.at_compile_time
+        node.set[:runit][:sv_bin] = '/usr/bin/sv'
+        node.run_state['jenkinsstack_private_key'] = 'foo'
+        # no need to converge elkstack agent for this
+        node.set['platformstack']['elkstack_logging']['enabled'] = false
+      end.converge(described_recipe)
     end
 
     it 'includes recipes' do
       expect(chef_run).to include_recipe('apt::default')
       expect(chef_run).to include_recipe('build-essential::default')
-      expect(chef_run).to include_recipe('jenkins::java')
       expect(chef_run).to include_recipe('jenkins::master')
     end
 
@@ -34,15 +35,20 @@ describe 'jenkinsstack::master' do
 
   describe 'centos' do
     let(:chef_run) do
-      ChefSpec::Runner.new do |node|
+      ChefSpec::Runner.new(platform: 'centos', version: '6.5') do |node|
+        # Setup system attributes
+        node.set['memory']['total'] = 2048
+        node.set['cpu']['total'] = 2
+
         node.set[:runit][:sv_bin] = '/usr/bin/sv'
-        node.set[:jenkinsstack_private_key] = 'foo'
+        node.run_state['jenkinsstack_private_key'] = 'foo'
+        # no need to converge elkstack agent for this
+        node.set['platformstack']['elkstack_logging']['enabled'] = false
       end.converge(described_recipe)
     end
 
     it 'includes recipes' do
       expect(chef_run).to include_recipe('build-essential::default')
-      expect(chef_run).to include_recipe('jenkins::java')
       expect(chef_run).to include_recipe('jenkins::master')
     end
 

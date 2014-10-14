@@ -66,5 +66,18 @@ if node['jenkinsstack']['nginx_proxy']
   include_recipe 'jenkinsstack::_nginx'
 end
 
+# Add ELK stack logging, if we are logging to elkstack
+if node.deep_fetch('platformstack', 'elkstack_logging', 'enabled')
+  # ensure platformstack's logging is already done
+  include_recipe 'platformstack::logging'
+
+  # add one more config for our additional logs
+  logstash_commons_config 'input_jenkins' do
+    template_source_file 'input_jenkins.conf.erb'
+    template_source_cookbook 'jenkinsstack'
+    variables(path: node['jenkins']['master']['home'])
+  end
+end
+
 tag('jenkinsstack')
 tag('jenkinsstack_master')

@@ -21,7 +21,7 @@ require 'chef/application'
 
 def stub_resources
   stub_command("rpm -qa | grep -q '^runit'").and_return(0)
-  stub_command("which nginx").and_return(0)
+  stub_command('which nginx').and_return(0)
 end
 
 at_exit { ChefSpec::Coverage.report! }

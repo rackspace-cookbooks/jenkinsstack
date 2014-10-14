@@ -1,0 +1,14 @@
+input {
+  file {
+    path => "<%= @path %>/*.log"
+    type => "jenkins"
+  }
+  file {
+    path => "<%= @path %>/logs/*.log"
+    type => "jenkins"
+  }
+  file {
+    path => "<%= @path %>/logs/slaves/**/*.log"
+    type => "jenkins_slaves"
+  }
+}

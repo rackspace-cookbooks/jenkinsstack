@@ -30,7 +30,13 @@ Here are attributes exposed by this stack. Please note that you may also overrid
     <td>Boolean</td>
     <td>whether to configure a locked-down nginx proxy in front of jenkins (mostly for testing. real customers will want specific security.)</td>
     <td><tt>true</tt></td>
-  </tr>  
+  </tr>
+  <tr>
+    <td><tt>['jenkinsstack']['site_name']</tt></td>
+    <td>String</td>
+    <td>the server name to use for the nginx proxy</td>
+    <td><tt>jenkins</tt></td>
+  </tr>
   <tr>
     <td><tt>['jenkinsstack']['rax_theme']</tt></td>
     <td>Boolean</td>

@@ -26,7 +26,7 @@ htpasswd "#{node['nginx']['dir']}/htpassword" do
 end
 
 # Had to allow these both in the key dir, since openssl's LWRP does that
-site_name = 'jenkins'
+site_name = node['jenkinsstack']['site_name']
 key_file = "#{node['nginx']['dir']}/#{site_name}.key"
 cert_file = "#{node['nginx']['dir']}/#{site_name}.pem"
 

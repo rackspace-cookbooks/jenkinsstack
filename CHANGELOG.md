@@ -1,3 +1,19 @@
+# 1.4.0
+
+- Move away from logstash_commons, just set attributes in case elkstack is present.
+
+# 1.3.0
+
+Allow server name to be set (#34).
+
+# 1.2.0
+
+Add elkstack logging for Jenkins logs if ELK available.
+
+# 1.1.0
+
+Serverspec update, slave fixes/simplifications
+
 # 1.0.1
 
 Refactor auth to prevent a problem during convergence. Now, the chef user and

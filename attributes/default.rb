@@ -45,7 +45,3 @@ default['jenkinsstack']['packages'] = [
 ]
 
 default['jenkinsstack']['slave']['executors'] = 6
-
-# drives logging configurations for the shared functionality
-default['logstash_commons']['instance_name'] = 'agent'
-default['logstash_commons']['service_name'] = 'agent'

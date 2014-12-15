@@ -27,7 +27,6 @@ pkey = node['jenkins']['master']['home'] + '/.ssh/id_rsa'
 # code will fail to find these keys we setup
 prepare_keys = ruby_block 'prepare_keys' do # ~FC014
   block do
-
     # Create the Jenkins user
     u = Chef::Resource::User.new(node['jenkins']['master']['user'], run_context)
     u.home node['jenkins']['master']['home']
